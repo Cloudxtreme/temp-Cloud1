@@ -1,2 +1,2 @@
 # Cloud
-all cloud &amp; virtualization components!
+all cloud components!
