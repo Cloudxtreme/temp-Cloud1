@@ -6,6 +6,5 @@ sudo apt-get install xdotool
 man xdotool
 
 Set "windowsize" to fullscreen size
-
-Use "windowposition" for starting position.
+Use "windowposition" to primary position.
 Then use "mouse click and drag" into negative coordinates!
