@@ -1,0 +1,2 @@
+aticonfig --initial
+aticonfig --resolution=0,1440x900
