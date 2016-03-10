@@ -5,10 +5,11 @@ aticonfig --adapter=0 --od-gettemperature
 
 Set(){
 # Persist on reboot!  http://www.phoronix.com/forums/forum/linux-graphics-x-org-drivers/amd-linux/40054-cannot-overclock-card
+# add to /etc/rc.local or Systemd equivalent
 
 aticonfig --od-enable
-aticonfig --adapter=0 --od-setclocks=400,406
-aticonfig --adapter=0 --od-commitclocks
+aticonfig --od-setclocks 400,406
+aticonfig --od-commitclocks
 }
 
 
