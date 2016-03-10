@@ -1,2 +1,4 @@
-aticonfig --initial
+amdconfig --initial --force
+
+aticonfig --initial --force
 aticonfig --resolution=0,1440x900
