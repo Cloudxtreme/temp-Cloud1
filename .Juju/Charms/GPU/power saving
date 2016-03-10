@@ -1,17 +1,15 @@
-Get(){
-aticonfig --adapter=0 --od-getclocks
-aticonfig --adapter=0 --od-gettemperature
-}
-
 Set(){
-# Persist on reboot!  http://www.phoronix.com/forums/forum/linux-graphics-x-org-drivers/amd-linux/40054-cannot-overclock-card
-# add to /etc/rc.local or Systemd equivalent
+# Does NOT Persist on reboot!
 
 aticonfig --od-enable
 aticonfig --od-setclocks 400,406
 aticonfig --od-commitclocks
 }
 
+Get(){
+aticonfig --adapter=0 --od-getclocks
+aticonfig --adapter=0 --od-gettemperature
+}
 
 myTemperatures(){
 
