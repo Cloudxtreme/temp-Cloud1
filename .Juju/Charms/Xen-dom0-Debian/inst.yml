@@ -1,0 +1,28 @@
+# pre
+lsb_release -a
+sudo apt-get install firmware-linux-nonfree
+
+# Xen	- https://wiki.debian.org/Xen
+apt-get install xen-linux-system
+apt-get install xen-tools
+
+dpkg-divert --divert /etc/grub.d/08_linux_xen --rename /etc/grub.d/20_linux_xen
+update-grub
+
+## network	- https://wiki.debian.org/BridgeNetworkConnections#Manual_bridge_setup
+brctl addbr xenbr0
+brctl addif xenbr0 eth0
+
+echo '''
+source /etc/network/interfaces.d/*
+
+# Xen starts here:
+auto lo
+iface lo inet loopback
+
+iface eth0 inet manual
+
+auto xenbr0
+iface xenbr0 inet dhcp
+   bridge_ports eth0
+''' | sudo tee /etc/network/interfaces
