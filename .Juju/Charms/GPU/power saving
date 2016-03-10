@@ -8,3 +8,13 @@ aticonfig --od-enable
 aticonfig --adapter=0 --od-setclocks=400,406
 aticonfig --adapter=0 --od-commitclocks
 }
+
+
+myTemperatures(){
+
+Current Clocks :    400           406
+Sensor 0: Temperature - 62.00 C
+
+
+
+}
