@@ -1,0 +1,10 @@
+Get(){
+aticonfig --adapter=0 --od-getclocks
+aticonfig --adapter=0 --od-gettemperature
+}
+
+Set(){
+aticonfig --od-enable
+aticonfig --adapter=0 --od-setclocks=400,406
+aticonfig --adapter=0 --od-commitclocks
+}
