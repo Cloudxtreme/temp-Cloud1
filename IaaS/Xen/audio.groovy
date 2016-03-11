@@ -16,9 +16,6 @@ Snapshot(){
   sudo lvcreate -s -n $lv$snap -L ${size}g $vg/$lv
 }
 
-Restore(){
-  sudo 
-}
 
 Start(){
   sudo xl create /home/me/Desktop/Windows.cfg
