@@ -1,0 +1,2 @@
+# Xen boot parameters
+GRUB_CMDLINE_XEN="dom0_mem=1024M,max:1024M dom0_max_vcpus=2 dom0_vcpus_pin"
