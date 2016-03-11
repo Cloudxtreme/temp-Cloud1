@@ -1,0 +1,5 @@
+# https://fedoraproject.org/wiki/Getting_started_with_virtualization
+
+# Seems to have best Experience!?
+  # This will install Mandatory, Default and Optional Packages.
+su -c "dnf group install with-optional virtualization"
