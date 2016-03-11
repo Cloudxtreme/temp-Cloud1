@@ -1,11 +1,11 @@
-vm=windows
-lvm=debian-vg	# LVM Volume Group
-
-
-sudo lvcreate -L 25G -n $vm /dev/$lvm
+vg=debian-vg	# LVM Volume Group
+lv=windows
 
 createStorage(){
-	sudo lvremove /dev/$lvm/$vm
+	if exists: /dev/$vg/$lv
+		lvremove /dev/$vg/$lv
+	if
+	lvcreate -L 25G -n $lv /dev/$vg
 }
 
 create(){
