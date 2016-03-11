@@ -1,0 +1,3 @@
+(dom0-min-mem 1024)
+(enable-dom0-ballooning no)
+(dom0-cpus 2)
