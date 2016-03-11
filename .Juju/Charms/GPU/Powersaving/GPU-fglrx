@@ -1,0 +1,12 @@
+Check(){
+aticonfig --adapter=0 --od-getclocks
+aticonfig --adapter=0 --od-gettemperature
+}
+
+On(){
+# Does NOT Persist on reboot!
+
+aticonfig --od-enable
+aticonfig --od-setclocks 400,406
+aticonfig --od-commitclocks
+}
