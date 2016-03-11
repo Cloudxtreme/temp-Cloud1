@@ -27,6 +27,7 @@ Temperature(){
 
 On(){
 	# https://wiki.archlinux.org/index.php/ATI#Powersaving
+	# https://wiki.archlinux.org/index.php/ATI#Persistent_configuration
 	#	su required
 
 	dpm(){
@@ -37,25 +38,32 @@ On(){
 
 	}
 	
-	Grub_radeon_dpm_off(){
-		# Grub radeon.dpm off
-		ansible! *add radeon.dpm=0 to /etc/default/grub
+	Grub_radeon_dpm(){
+		if off:
+			ansible! *add radeon.dpm=0 to /etc/default/grub
+		if on:
+			ansible! *add radeon.dpm=1 to /etc/default/grub
+
+		# update-grub
 		grub2-mkconfig -o /boot/grub2/grub.cfg
 		reboot
 	}
 
 	dynpm(){
 		# Dynamic frequency switching
+		echo dynpm > /sys/class/drm/card0/device/power_method
+		echo '''w /sys/class/drm/card0/device/power_method - - - - dynpm''' | tee /etc/tmpfiles.d/radeon-pm.conf
+		
+		# Persistent configuration
 	}
 
 	profile(){
 		# Profile-based frequency switching
 		echo profile > /sys/class/drm/card0/device/power_method
 		echo low > /sys/class/drm/card0/device/power_profile
-	}
-
-	persist_configuration(){
-		# https://wiki.archlinux.org/index.php/ATI#Persistent_configuration
+		
+		# Persistent configuration
+		echo '''KERNEL=="dri/card0", SUBSYSTEM=="drm", DRIVERS=="radeon", ATTR{device/power_method}="profile", ATTR{device/power_profile}="low"''' | tee /etc/udev/rules.d/30-radeon-pm.rules
 		
 	}
 }
