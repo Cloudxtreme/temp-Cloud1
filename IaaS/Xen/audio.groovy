@@ -14,4 +14,5 @@ Snapshot(){
   snap='-prejack' ; lv=windows ; vg=debian-vg ; size=15
   sudo lvcreate -s -n $lv$snap -L ${size}g $vg/$lv
   
+  sudo xl create /home/me/Desktop/Windows.cfg
 }
