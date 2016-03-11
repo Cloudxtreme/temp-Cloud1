@@ -28,6 +28,7 @@ Temperature(){
 On(){
 	# https://wiki.archlinux.org/index.php/ATI#Powersaving
 	# https://wiki.archlinux.org/index.php/ATI#Persistent_configuration
+	# Keep!  http://askubuntu.com/questions/65570/radeon-hd-6950-temperature-is-way-too-hot
 	#	su required
 
 	Grub_dpm_onoff(){
