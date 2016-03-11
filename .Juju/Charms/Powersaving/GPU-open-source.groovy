@@ -1,4 +1,4 @@
-#	I'm getting as low as 62.0°C with 'profile'!
+#	"I'm getting as low as 62.0°C with 'profile'!"
 
 Info(){
 	# Check info
@@ -30,15 +30,7 @@ On(){
 	# https://wiki.archlinux.org/index.php/ATI#Persistent_configuration
 	#	su required
 
-	dpm(){
-		# Dynamic power management - hardware based
-		# Grub radeon.dpm on
-		echo battery > /sys/class/drm/card0/device/power_dpm_state
-		echo low > /sys/class/drm/card0/device/power_dpm_force_performance_level
-
-	}
-	
-	Grub_radeon_dpm(){
+	Grub_dpm_onoff(){
 		if off:
 			ansible! *add radeon.dpm=0 to /etc/default/grub
 		if on:
@@ -49,6 +41,14 @@ On(){
 		reboot
 	}
 
+	dpm(){
+		# Dynamic power management - hardware based
+		# Grub radeon.dpm on
+		echo battery > /sys/class/drm/card0/device/power_dpm_state
+		echo low > /sys/class/drm/card0/device/power_dpm_force_performance_level
+
+	}
+	
 	dynpm(){
 		# Dynamic frequency switching
 		echo dynpm > /sys/class/drm/card0/device/power_method
