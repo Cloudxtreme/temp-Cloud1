@@ -12,8 +12,9 @@ Start(){
   
 
 
-sudo qjackctl
-sudo alsaplayer -o jack ~/Downloads/Allegro.mp3
+sudo su
+qjackctl
+alsaplayer -o jack ~/Downloads/Allegro.mp3
 
 
 }
