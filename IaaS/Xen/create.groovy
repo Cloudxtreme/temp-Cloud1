@@ -1,8 +1,10 @@
 vm=windows
-sudo lvcreate -L 40G -n $vm /dev/xenv
+lvm=debian-vg	# LVM Volume Group
+
+sudo lvcreate -L 25G -n $vm /dev/$lvm
 
 createDisk(){
-	sudo lvremove /dev/xenv/$vm
+	sudo lvremove /dev/$lvm/$vm
 }
 
 run(){
