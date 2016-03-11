@@ -14,3 +14,5 @@ Start(){
   sudo xl create /home/me/Desktop/Windows.cfg
   
 }
+
+sudo qjackctl
