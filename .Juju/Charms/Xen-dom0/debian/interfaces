@@ -1,0 +1,16 @@
+source /etc/network/interfaces.d/*
+
+
+# NIC 1
+auto lo
+iface lo inet loopback
+
+iface eth0 inet manual
+
+auto xenbr0
+iface xenbr0 inet manual
+  bridge_ports eth0
+
+# NIC 2
+auto eth1
+iface eth1 inet dhcp
