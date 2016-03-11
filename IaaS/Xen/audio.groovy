@@ -13,8 +13,10 @@ Start(){
 
 
 sudo su
-qjackctl
-alsaplayer -o jack ~/Downloads/Allegro.mp3
+qjackctl &
+jack_load netmanager
 
+# Test
+alsaplayer -o jack ~/Downloads/Allegro.mp3
 
 }
