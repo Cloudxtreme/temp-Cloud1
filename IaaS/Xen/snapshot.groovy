@@ -3,13 +3,13 @@ lv=windows
 snap='-i'
 size=15
 
-sudo lvcreate -s -n $lv$snap -L ${size}g $vg/$lv
-sudo lvs
+# OR
+snap='-prejack' ; lv=windows ; vg=debian-vg ; size=15
 
 Snapshot(){
-  snap='-prejack' ; lv=windows ; vg=debian-vg ; size=15
   sudo lvremove /dev/$vg/$lv$snap
   sudo lvcreate -s -n $lv$snap -L ${size}g $vg/$lv
+  sudo lvs
 }
 
 
