@@ -7,5 +7,11 @@ http://askubuntu.com/questions/557906/problem-starting-jack-server-jack-server-i
 # install
 sudo apt-get -y install jackd2 qjackctl alsaplayer alsaplayer-jack vlc 
 
-
 alsaplayer -o jack ~/Desktop/Allegro.mp3
+
+
+Snapshot(){
+  snap='-prejack' ; lv=windows ; vg=debian-vg ; size=15
+  sudo lvcreate -s -n $lv$snap -L ${size}g $vg/$lv
+  
+}
