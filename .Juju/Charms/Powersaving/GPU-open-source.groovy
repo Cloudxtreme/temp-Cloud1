@@ -1,4 +1,5 @@
 #	"I'm getting as low as 62.0°C with 'profile'!"
+#	http://xorg.freedesktop.org/wiki/RadeonFeature
 
 Info(){
 	# Check info
