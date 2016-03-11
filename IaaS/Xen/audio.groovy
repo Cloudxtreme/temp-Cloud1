@@ -13,6 +13,13 @@ alsaplayer -o jack ~/Desktop/Allegro.mp3
 Snapshot(){
   snap='-prejack' ; lv=windows ; vg=debian-vg ; size=15
   sudo lvcreate -s -n $lv$snap -L ${size}g $vg/$lv
-  
+}
+
+Restore(){
+  sudo 
+}
+
+Start(){
   sudo xl create /home/me/Desktop/Windows.cfg
+  
 }
