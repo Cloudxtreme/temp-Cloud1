@@ -1,0 +1,198 @@
+#!/bin/bash
+bootstrap(){
+  mkdir ~/bin; wget https://raw.githubusercontent.com/EntrepreneursInc/ZenCloud/master/ZenOS/.all/sn -O ~/bin/sn; chmod a+x ~/bin/sn
+}
+
+rfs=/media/rfs
+arch=$rfs/sn/arc
+snap=$rfs/sn/sna
+
+# Archive?
+if [ "$1" == '-a' ];then
+  #DEL archive=true
+  snap=$arch
+  ask=yes
+  shift
+fi
+
+list(){
+  sudo btrfs sub list $snap -t -o -r --sort=gen
+}
+
+setup(){
+  which btrfs || sudo apt-get install -y btrfs-tools
+  # get vars
+  export `cat /etc/fstab | grep 'UUID.* / *btrfs ' | sed 's/.\/.*//'` 	#root
+  cat /etc/fstab | grep '/boot' && boot=true || boot=false 	#boot
+
+  # get subvols
+  cat /etc/fstab | grep 'subvol=@home' # Ubuntu
+  if [ $? = 0 ];then     root=@ ; home=@home ;fi
+  cat /etc/fstab | grep 'subvol=home' # Fedora
+  if [ $? = 0 ];then     root=root ; home=home ;fi
+
+  # Mount root
+  if ! `mountpoint -q $rfs`;then
+    sudo mkdir -p $rfs
+    sudo mount $(sudo blkid -U $UUID) $rfs
+  fi
+
+  #	Setup RootFS
+  if [ ! -d $arch ];then
+    sudo chown $USER $rfs
+    mkdir -p $rfs/sn/{arc,sna}
+
+    # Data
+    btrfs sub create $rfs/data
+
+    # FS
+    echo "#sn
+UUID=$UUID $rfs           btrfs   defaults 0       0
+#$rfs/vm/docker /var/lib/docker  none  bind
+#" | sudo tee -a /etc/fstab
+    sudo mount -a
+  fi
+}
+
+## Todo: Consolidate Rm, rmifexists, & Cleanold into just Rm!
+
+Cleanold(){
+if [ -d $rfs/.old ];then sudo btrfs subvolume delete $rfs/.old ;fi
+if [ -d $rfs/.old~r/@ ];then sudo btrfs subvolume delete $rfs/.old~r/@ ;fi
+if [ -d $rfs/.old~r/var/lib/machines ];then sudo btrfs subvolume delete $rfs/.old~r/var/lib/machines ;fi
+if [ -d $rfs/.old~r ];then sudo btrfs subvolume delete $rfs/.old~r ;fi
+}
+
+notempty(){
+  if [ -z $1 ];then echo "Argument is empty."
+    exit 1
+  fi
+}
+
+checkexist(){
+  if [ ! -d $snap/$1 ];then
+    echo "That Doesn't Exist."
+    exit 1
+  fi
+}
+
+rmifexists(){
+  #previous subvol
+  tmp=$snap
+  # Remove snap
+  if [ -d $1/$2 ];then snaps=$1 ; Rm $2;fi
+  #restore subvol
+  snaps=$tmp
+}
+
+Mv(){
+  # checks
+  checkexist $1
+  notempty $2
+
+  # rm Destination
+  rmifexists $to $2
+
+  # *into Archive?
+  from=$snap
+  case ${3:-} in
+    -a) to=$arch ; snaps=$arch ;;  #set 'snaps' for list at end.
+    *) to=$snap ;;
+  esac
+
+  # Move
+  sudo btrfs subvolume snapshot -r $from/$1~r $to/$2~r
+  sudo btrfs subvolume snapshot -r $from/$1 $to/$2
+
+  # now rm old
+  rmifexists $from $1
+}
+
+Rm(){
+  # checks
+  notempty $1
+  checkexist $1
+
+  # Confirmation y/N
+  if [ $ask ] && [ $verb != 're' ];then
+    read -r -p "Really delete: $1 ? [y/N]" response
+    response=${response,,}    # tolower
+    if [[ ! $response =~ ^(yes|y)$ ]];then
+      echo 'No. Exiting' ;list ;exit 1
+    fi
+  fi
+
+  # Delete
+  for i in $@;do
+  sudo btrfs subvolume delete $snap/$i~r
+  sudo btrfs subvolume delete $snap/$i
+  done
+  echo -e "\n# Deleted: $@"
+}
+
+Restore(){
+  # checks
+  notempty $1
+  checkexist $1
+  Cleanold
+
+  # Restore
+  sudo mv $rfs/$root/ $rfs/.old~r
+  sudo mv $rfs/$home/ $rfs/.old
+  sudo btrfs subvolume snapshot $snap/$1~r $rfs/$root
+  sudo btrfs subvolume snapshot $snap/$1 $rfs/$home
+  if [ $boot = true ];then sudo rsync -av --delete $snap/$1~r/bootsnap/ /boot/ ;fi
+
+  # Powercycle
+  case ${2:-} in
+    s) sudo poweroff now;;
+    r) echo 'Manually Reboot';;
+    *) sudo reboot;;
+  esac
+# sudo btrfs sub list /
+}
+
+Snap(){
+  # if separate /boot, rsync
+  if [ $boot = true ];then sudo mkdir -p /bootsnap; sudo rsync -av --delete /boot/ /bootsnap/
+  fi
+
+  # replace existing
+  if [ -d $snap/$1~r ];then Rm $1;fi
+
+  # Take Snapshot
+  sync
+  btrfs filesystem sync /
+  sudo btrfs subvolume snapshot -r $rfs/$root $snap/$1~r
+  sudo btrfs subvolume snapshot -r $rfs/$home $snap/$1
+}
+
+
+Help='
+# Single
+sn [-a] <new>           		 New snap!
+sn [-a] rm <snap>       	 Delete
+sn [-a] re <snap>       	 Restore
+sn [-a] re <snap> off   	 Restore and poweroff
+
+# Move & Clone
+sn [-a] mv <from> <to>  	 Rename snap
+sn mv <from> <to> -a    	 Move snap *into archive.
+sn [-a] cp <from> <to>  	 Clone
+sn cp <from> <to> -a    	 Clone snap *into archive.
+'
+
+
+# main
+setup
+verb=${1:-}
+case ${1:-} in
+  mv) shift; Mv $@;;
+  re) shift; Restore $@;;
+  rm) shift; Rm $@;;
+  de) debug;;
+  h) echo $Help;;
+  *) if [ "$1" ];then Snap $@;fi;;
+esac
+#clear
+list
