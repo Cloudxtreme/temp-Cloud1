@@ -1,10 +1,10 @@
 # Use Samba to develop from Windows!
 #   https://wiki.debian.org/SambaServerSimple
+hostnamectl set-hostname master
+
 apt-get install samba -y
 
-
 sed -i 's/read only = yes/read only = no/' /etc/samba/smb.conf
-
 echo '''
 [Zen]
    comment = Zen Cloud devel
