@@ -15,7 +15,17 @@ echo '''
 ''' | tee -a /etc/samba/smb.conf
 mkdir -p /home/Zen
 
-# user
+#
 adduser me
 adduser me sudo
 smbpasswd -a me
+
+#
+systemctl smbd restart
+
+#  Test
+touch  /home/Zen/test
+apt-get install samba-client -y
+ip=10.0.0.
+smbclient //$ip/me
+
