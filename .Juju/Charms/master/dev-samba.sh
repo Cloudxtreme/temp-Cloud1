@@ -3,7 +3,6 @@
 hostnamectl set-hostname master
 
 apt-get install samba -y
-
 sed -i 's/workgroup = WORKGROUP/workgroup = MASTER/' /etc/samba/smb.conf
 sed -i 's/read only = yes/read only = no/' /etc/samba/smb.conf
 echo '''
@@ -15,18 +14,9 @@ echo '''
    guest ok = yes
 ''' | tee -a /etc/samba/smb.conf
 mkdir -p /home/Zen
-
 #
 adduser me
 adduser me sudo
 smbpasswd -a me
-
 #
 systemctl smbd restart
-
-#  Test
-touch  /home/Zen/test
-apt-get install samba-client -y
-ip=10.0.0.
-smbclient //$ip/me
-
