@@ -1,6 +1,9 @@
 # Use Samba to develop from Windows!
 #   https://wiki.debian.org/SambaServerSimple
 apt-get install samba -y
+
+cp /etc/samba/smb.conf /etc/samba/smb.conf.bac
+
 sed -i 's/workgroup = WORKGROUP/workgroup = MASTER/' /etc/samba/smb.conf
 sed -i 's/read only = yes/read only = no/' /etc/samba/smb.conf
 echo '''
