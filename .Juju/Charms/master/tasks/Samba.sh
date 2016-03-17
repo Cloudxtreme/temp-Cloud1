@@ -15,8 +15,8 @@ echo '''
    guest ok = yes
 ''' | tee -a /etc/samba/smb.conf
 mkdir -p /home/Zen
+chmod 775 /home/Zen
 #
-adduser me
 adduser me sudo
 smbpasswd -a me
 #
