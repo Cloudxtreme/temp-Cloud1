@@ -4,6 +4,7 @@ hostnamectl set-hostname master
 
 apt-get install samba -y
 
+sed -i 's/workgroup = WORKGROUP/workgroup = MASTER/' /etc/samba/smb.conf
 sed -i 's/read only = yes/read only = no/' /etc/samba/smb.conf
 echo '''
 [Zen]
