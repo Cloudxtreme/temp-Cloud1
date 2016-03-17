@@ -10,6 +10,12 @@ echo '''
    comment = Zen Cloud devel
    read only = no
    locking = no
-   path = /root/Zen
+   path = /home/Zen
    guest ok = yes
 ''' | tee -a /etc/samba/smb.conf
+mkdir -p /home/Zen
+
+# user
+adduser me
+adduser me sudo
+smbpasswd -a me
