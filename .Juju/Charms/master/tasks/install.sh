@@ -2,4 +2,4 @@
 apt-get install -y git openjfx python-dev python-pip python-paramiko python-markupsafe
 pip install ansible
 
-pip install markupsafe  # Only required for Debian 8!
+hostnamectl set-hostname master
