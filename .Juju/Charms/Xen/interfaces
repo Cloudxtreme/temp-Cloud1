@@ -1,0 +1,8 @@
+# This works on Ubuntu!
+auto lo enp3s0 xenbr0
+iface lo inet loopback
+
+iface xenbr0 inet dhcp
+  bridge_ports enp3s0
+
+iface enp3s0 inet manual
